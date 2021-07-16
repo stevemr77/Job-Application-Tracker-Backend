@@ -8,6 +8,7 @@ class JobApplicationsController < ApplicationController
     end
 
     def create
+        
         @new_job_application = JobApplication.create new_job_application_params
 
         if @new_job_application.valid?
@@ -21,6 +22,12 @@ class JobApplicationsController < ApplicationController
     def destroy
         @job_application_to_destroy = JobApplication.find(params[:id])
         @job_application_to_destroy.destroy
+    end
+
+    def show_all
+        @all_job_applications = JobApplication.all
+
+        render json: @all_job_applications
     end
 
     private

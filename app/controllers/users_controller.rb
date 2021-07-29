@@ -1,15 +1,27 @@
 class UsersController < ApplicationController
-    
+    skip_before_action :authenticate, only: [:create, :login]
     
     def create
-        @new_user = User.find_or_create_by user_params
+        @user = User.create user_params
         
-        if @new_user.valid?
-            render json: @new_user, status: :created
+        if @user.valid?
+            render json: @user, status: :created
         else
-            render json: @new_user.errors.messages
+            render json: @user.errors.messages
         end
         
+    end
+
+    def login
+        @user = User.find_by(name: params[:user][:name])
+
+        if @user && @user.authenticate(params[:user][:password])
+            @token = JWT.encode({user_id: @user.id}, 'this is our little secret')
+
+            render json: {token: @token, user: @user}, status: :ok
+        else 
+            render json: {error: "Invalid Username and/or Password"}, status: :unauthorized
+        end
     end
 
     def show                                                #READ action show
@@ -31,7 +43,7 @@ class UsersController < ApplicationController
     private
 
     def user_params
-        params.permit([:name])
+        params.require(:user).permit([:name, :password])
     end
 
 end

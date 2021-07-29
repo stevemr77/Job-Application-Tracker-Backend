@@ -8,7 +8,7 @@
 JobApplication.destroy_all
 User.destroy_all
 
-michael = User.create name: "michael"
+michael = User.create username: "michael", password: '123'
 
 JobApplication.create([
     {company_name: "TextUs", position: "Junior Ruby on rails engineer", date_applied: "11/07/2021", salary: 75_000, follow_up: false, user: michael},

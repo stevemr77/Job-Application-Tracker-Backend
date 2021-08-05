@@ -14,7 +14,7 @@ class UsersController < ApplicationController
 
     def login
         @user = User.find_by(name: params[:user][:name])
-
+        
         if @user && @user.authenticate(params[:user][:password])
             @token = JWT.encode({user_id: @user.id}, 'this is our little secret')
 
@@ -24,8 +24,7 @@ class UsersController < ApplicationController
         end
     end
 
-    def show                                                #READ action show
-        @user = User.find(params[:id])
+    def profile                                                #READ action show
         render json: @user
     end
     
